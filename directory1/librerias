@@ -1,0 +1,480 @@
+#include <stdio.h>
+#include <unistd.h>
+
+/**
+ * Copyright ©2023, All Rights Reserved, pat_mic
+ * libreria de utilitarios para fines académicos de programación I - EPN
+ **/
+//===Color font ===/
+#define COLOR_BLACK   "\x1B[30m"
+#define COLOR_RED     "\x1b[31m"
+#define COLOR_GREEN   "\x1b[32m"
+#define COLOR_YELLOW  "\x1b[33m"
+#define COLOR_BLUE    "\x1b[34m"
+#define COLOR_MAGENTA "\x1b[35m"
+#define COLOR_CYAN    "\x1b[36m"
+#define COLOR_WHITE   "\x1B[37m"
+#define COLOR_ORANGE  "\x1B[38;2;255;128;0m"
+#define COLOR_ROSE    "\x1B[38;2;255;151;203m"
+#define COLOR_LBLUE   "\x1B[38;2;53;149;240m"
+#define COLOR_LGREEN  "\x1B[38;2;17;245;120m"
+#define COLOR_GRAY    "\x1B[38;2;176;174;174m"
+#define COLOR_RESET   "\x1b[0m"
+
+//===Color background ===/
+#define BG_BLACK   "\x1B[40m"
+#define BG_RED     "\x1B[41m"
+#define BG_GREEN   "\x1B[42m"
+#define BG_YELLOW  "\x1B[43m"
+#define BG_BLUE    "\x1B[44m"
+#define BG_MAGENTA "\x1B[45m"
+#define BG_CYAN    "\x1B[46m"
+#define BG_WHITE   "\x1B[47m"
+#define BG_ORANGE  "\x1B[48;2;255;128;0m"
+#define BG_LBLUE   "\x1B[48;2;53;149;240m"
+#define BG_LGREEN  "\x1B[48;2;17;245;120m"
+#define BG_GRAY    "\x1B[48;2;176;174;174m"
+#define BG_ROSE    "\x1B[48;2;255;151;203m"
+
+//Colores de texto
+#define textColorBlack 30
+#define textColorRed 31
+#define textColorGreen 32
+#define textColorYellow 33
+#define textColorBlue 34
+#define textColorMagenta 35
+#define textColorCyan 36
+#define textColorWhite 37
+
+//colores de fondo
+#define fnBgBlack 40
+#define fnBgRed 41
+#define fnBgGreen 42
+#define fnBgYellow 43
+#define fnBgBlue 44
+#define fnBgMagenta 45
+#define fnBgCyan 46
+#define fnBgWhite 47
+
+/**
+ * El primer valor es del color de texto y el segundo del color del fondo
+*/
+void setColor(int color, int BG_color)
+{
+        printf("%c[%d;%d;%dm", 0x1B, 1,color,BG_color);
+}
+
+/**
+ * setTextColor, permite definir el color de texto
+ * ejemplo: setTextColor(textColorBlue);
+*/
+void setTextColor(int color){
+        printf("%c[%d;%dm", 0x1B, 1,color);
+}
+
+
+//bucles
+/**
+ * 
+*/
+void  signoAlernadoFibonaci(int cantida)
+{
+    int a =0, b=1, c=1;
+    for (int i = 0; i < cantida; i++)
+    {
+        //printf("%i",c);  // 1 1 2 
+        for (int s = 0; s < c; s++)
+            printf ( (i %2==0) ?  "+" : "-");
+
+        printf("\t");
+        c = a + b;
+        a = b;
+        b = c;
+    }
+    cantida =0;
+    printf("\nsignoAlernadoFibonaci.cantida %i",cantida); 
+}
+
+
+
+void main()
+{
+    int cantida=0;
+    printf("\nIngresa numero de terminos: ");
+    scanf("%i",&cantida);
+    signoAlernadoFibonaci(cantida);
+    printf("\nmain.cantida %i",cantida); 
+}
+
+
+void usoProcedimiento()
+{
+        int edad=0;
+        edad = getNumeroPositivo("Ingresa tu edad:");
+        printf(" la edad ingresada es : %i", edad );
+
+        edad = getNumeroPositivo("Ingresa un num mayor a cero:");
+        printf(" la edad ingresada es : %i", edad );
+        
+        char *menuOpc ="\n\tMENU OPERA \n1. Generar PARES \n2. Generar IMPARES \n3. Generar fibonaci \nIngresa tu opc: ";        
+}
+
+
+
+char menu()
+{
+    int opc=0;
+    do{
+        setTextColor(textColorBlue);
+        printf("\n\t PATMIC_RETOS");
+        setTextColor(textColorCyan);
+
+        printf("\n1. Pares");
+        printf("\n2. Impares");
+        printf("\n3. Fibonaci");
+        printf("\n4. Dibujar cuadrado");
+        printf("\n5. Dibujar triangulo");
+        printf("\n99.Salir");
+        opc =  getNumeroPositivo("Ingresa opc: ");
+    }while ( opc < 0 ) ;
+    return opc;
+}
+
+
+
+int main()
+{
+        // crear la suma de dos mumeros? 
+
+        //int opcMenu     = menu();
+        // int num[] ={1,2,3,4,5};
+
+        // num[0]=0;
+        // num[2]=2;
+        // num[1]=1;
+
+        switch (getNumeroPositivo("Ingresa un numero de mes:"))
+        {
+            case ENE :  printf("%c Enero", ENTER);           
+                        break;
+            case FEB :  printf("%c Febrero", ENTER);         
+                        break;
+            case MAR :  printf("%c Marzo", ENTER);           
+                        break;
+            default:    printf("%c Mes no registrado", ENTER); 
+                        break;
+        }
+        printf("%c", ENTER);
+        //clearTerminal();
+        //LoadingBar(30);
+        //loadingShort();
+        //int nroTermino  = getNumeroPositivo("Ingresa el nro. de términos: ");
+        //showCuadrado(nroTermino);
+        // switch (opcMenu)
+        // {
+        //         case 1 :showPares(nroTermino);
+        //                 break;
+        //         case 2 :showImpares(nroTermino);
+        //                 break;
+        //         case 3 :showSignoAlernadoFibonaci(nroTermino);
+        //                 break;
+        //         case 4 :showCuadrado(nroTermino);
+        //                 break;
+        //         case 99 :printf("Hasta la vista baby...!");
+        //                 break;
+        //         default:printf("\nOopcion no valida");
+        //                 break;
+        // }
+        return 0;
+}
+
+/**
+ * secuenciaSigno: procedimiento de sisgnos 
+ * numeroSigno: catidad de signs a generar
+ * caracter: caracter a presetar
+*/
+void secuenciaSigno(int numeroSigno, char caracter)
+{
+    for (int i = 0; i < numeroSigno; i++)
+        printf("%c ", caracter);
+    printf("\n");
+}
+
+
+
+/**
+ * secuenciaSignoAlernada: procedimiento de sisgnos alternos
+ * numeroSigno: catidad de signs a generar
+*/
+void secuenciaSignoAlernada(int numeroSigno)
+{
+     for (int i = 0; i < numeroSigno; i++)
+        if (i%2==0)        
+            printf("+ ");
+        else
+            printf("- ");
+
+    printf("\n");
+}
+
+int suma(int a, int b)
+{   
+    int c = a + b;
+    return c;
+}
+int sumaPares(int a, int b)
+{   
+    if((a%2==0) && (b%2==0))
+        return a + b;
+    return 0;
+}
+int main()
+{
+    char caracter='+';
+    int cantidaSigno=0;
+    int a=0, b=0,c=0;
+    printf("Ingresa un numero de signos que deseas: ");
+    scanf("%i",&cantidaSigno);
+    
+    secuenciaSigno( cantidaSigno,  caracter);
+    secuenciaSignoAlernada(cantidaSigno);
+    //-----------------------------------
+
+    
+    printf("Ingresa a: ");
+    scanf("%i",&a);
+    printf("Ingresa b: ");
+    scanf("%i",&b);
+
+    c=sumaPares(a,b);
+    printf("La suma es: %i",c);
+    printf("\n");
+
+    return 0;
+}
+
+
+#define TIEMPO 100000
+enum escapes { 
+	BELL 		= '\a', 
+	RETROCESO 	= '\b',
+	TAB 		= '\t',
+	ENTER 		= '\n', 
+	TAB_V 		= '\v', 
+	RETORNO 	= '\r'
+};
+
+enum months { ENE = 1, FEB, MAR, ABR, MAY, JUN, JUL, AGO, SEP, OCT, NOV, DIC };
+
+void clearTerminal()
+{
+    system("cls||clear"); 
+    fflush(stdout); 
+    //cout << "\033[H\033[2J\033[3J" ;
+    //cn.clear();
+}
+
+
+int getNumeroPositivo(char *label) //
+{
+    int numero;
+    char str[3];  //999 abc
+    do
+    {
+        printf("\n %s", label);
+        gets(str);
+        sscanf(str,"%d", &numero);   
+    } while (numero <= 0 );
+    fflush(stdin);
+    return numero;  
+}
+
+char menuGeneral( char *showOpc)
+{
+    char opc='-';
+    do{
+        printf("\n %s", showOpc);
+        scanf("%c",&opc);
+    }while ( !((opc =='1') || (opc =='2') || (opc =='3')) ) ;
+    return opc;
+}
+
+
+void getLinea(char *str)    // line[lim = 10] -->   {h|o|l|a| |c|o|m|o|\n|\0|~|~|~|}
+{      
+    char c;
+    int i =0;  
+    do{
+        c = getchar();
+        str[i++] = c;
+    }while(c != '\n');
+    str[i]  == '\0';
+}
+
+
+void loading()
+{
+    int contadorC=0;
+    char c[5] ="\\|/- ";
+
+    for (int i = 0; i <= 100; i++)
+    {
+        if(contadorC==5)
+            contadorC =0;
+        printf("%c%c%c %d %% ", RETORNO,TAB, c[contadorC++],i);
+        usleep(TIEMPO);
+    }
+}
+
+
+void loadingShort()
+{
+    char c[] ="\\|/- ";
+    for (int i = 0; i <= 100; i++)
+    {
+        //contadorC== (i%5==0) ? i%5 : 0;
+        printf("\r%c %3d %% ",c[i%5],i);
+        //usleep(TIEMPO);
+    }
+}
+
+
+void LoadingBar(int size)
+{ 
+    char barra[size];
+    float porcentaje = (float)100/(float)size;
+    for (int i = 0; i <= size; i++)
+        barra[i]=' ';
+    
+    for (int i = 0; i <= size; i++)
+    {
+        barra[i]='#';
+        printf("%c%c [%s]  %.0f %%", RETORNO, TAB, barra, i*porcentaje);
+        usleep(TIEMPO*2);
+    }
+}
+
+#define DELAY 100000
+/**
+ * showPares, genera pares 
+ * @nro, numero de pares a generar
+*/
+void showPares(int nro)
+{
+    for (int i = 0; i < nro*2 ; i++)
+    {
+        if(i%2==0)
+            printf("%i ", i);
+    }
+    printf("\n");
+}
+
+/**
+ * showImpares, genera impares 
+ * @nro, numero de pares a generar
+*/
+void showImpares(int nro)
+{
+    for (int i = 0; i < nro*2; i++)
+    {
+        if(i%2!=0)
+            printf("%i ", i);
+    }
+}
+
+
+/**
+ * showSignoAlernadoFibonaci, presenta signos alternos con la serie fibonaci 
+ * @nro, numero de pares a generar
+*/
+void  showSignoAlernadoFibonaci(int nro)
+{
+    int a =0, b=1, c=1;
+    for (int i = 0; i < nro; i++)
+    {
+        for (int s = 0; s < c; s++)
+            printf ( (i %2==0) ?  "+" : "-");
+
+        printf("\t");
+        c = a + b;
+        a = b;
+        b = c;
+    }
+    printf("\n"); 
+}
+
+void showCuadrado(int size)
+{
+    //          * * * *  h..... v
+    //          *     *         . 
+    //          *     *         .
+    //          * * * *         .
+
+    for (int v = 1; v <= size; v++)
+    {
+        for (int h = 1; h <= size; h++)
+        {
+            if( (h == 1 || h== size) ||
+                (v == 1 || v== size) )
+                printf("* ");
+            else
+                printf("  ");
+                //usleep(50000);
+        }
+        printf("\n");
+    }
+
+    // for (int v = 0; v < size; v++)
+    // {
+    //     for (int h = 0; h < size; h++)
+    //         if( (h == 0 || h== size-1) ||
+    //             (v == 0 || v== size-1) )
+    //             printf("* ");
+    //         else
+    //             printf("  ");
+    //     printf("\n");
+    // }
+}
+
+
+void showTriangulo(int size)
+{
+    //      *
+    //      * *
+    //      * * *
+    //      * * * *
+    //      * * * * *
+
+    for (int f = 1; f <= size; f++)
+    {
+        for (int c = 1; c <= size; c++)
+        {
+            if (f >= c)
+                printf ("* ");
+            else
+                printf("  ");
+            usleep(DELAY);
+        }
+        printf("\n");
+    }
+    
+}
+
+
+
+void showCruz(int size)
+{
+    for (int f = 1; f <= size; f++)
+    {
+        for (int c = 1; c <= size; c++)
+        {
+            if ((c==size/2 + 1)||(f==size/2 + 1))
+                printf ("* ");
+            else
+                printf("  ");
+            //usleep(DELAY);
+        }
+        printf("\n");
+    }
+    
+}
