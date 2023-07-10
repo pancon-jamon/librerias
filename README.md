@@ -1,2 +1,2 @@
-# librerias
-las librerias
+# notas
+notas en clase dibujos, etc
