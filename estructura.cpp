@@ -1,5 +1,5 @@
 /*
-ARCHIVOS DE TEXTO, 24/JUL/2024
+ARCHIVOS DE TEXTO, 24,25/JUL/2024
 CLAUDIA COELLO
 PROGRAMACION I SEGUNDO BIMESTRE
 rubber duck debugging: tecnica de programacion. Se le explica el codigo a " un patito de hule"
@@ -53,7 +53,7 @@ MINUTO 27:07
 */
 
 #include <iostream>
-#include<fstream>//f de files, stream flujo de datos, permite leer archivos de 
+#include<fstream>//f de files, stream flujo de datos, permite leer archivos de texto, binarios
 #include <iomanip>
 
 using namespace std;
@@ -109,18 +109,16 @@ bool readArchivo(string pathFileName)//path ruta del archivo
     string line;
 
 
-    cout << "readArchivo:" << endl;
-    f.open(pathFile, ios_base::in);
+    cout << "readArchivo:" << pathFileName<< endl;
+    f.open(pathFileName, ios_base::in);//in indica que sera solo de lectur
     if(!f.is_open())
-        cout<<"error al abrir el archivo"<<pathFile<<endl;
+        cout<<"error al abrir el archivo"<<pathFileName<<endl;
     else
     {
         while(!f.eof() )
         {
             getline(f, line);
             cout<<line<<endl;
-
-
         }
         return true;
     }    
@@ -144,7 +142,7 @@ bool saveMascota(string pathFileName)//path ruta del archivo
     
     for (int i = 0; i < indexMascota; i++)
     {
-        auto &&m =mascotaDomestica[i];
+        auto &&m==mascotaDomestica[i];
        f<< m.tipo<< " ; "<< m.nomre<< endl; //<-guarda en el archivo
     }
     
