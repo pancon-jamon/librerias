@@ -81,175 +81,199 @@ struct Mascota//<--estructura(asocia informacion) ayuda a facilitar el codigo
 // string Personatipo[9];
 // string Personanombre[9];
 
-Mascota mascotaDomestica[7];
-int indexMascota=0;
 
-void getMascota(string lineArchivo, char del)//ajustar para la nueva entrada de datos, formato y color
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+#include <sstream>
+#include <cstdlib>
+#include <string>
+
+using namespace std;
+
+struct Mascota
 {
-    struct Mascota m;
+    string tipo;
+    string raza;
+    string sexo;
+    int edad;
+    string nombre;
+};
+
+Mascota mascotaDomestica[7];
+int indexMascota = 0;
+
+void getMascota(string lineArchivo, char del)
+{
+    Mascota m;
     stringstream ss(lineArchivo);
     string word;
-    int i=1;
+    int i = 1;
     while (!ss.eof())
-    {    
+    {
         getline(ss, word, del);
-        if(i==1)
-            m.tipo=word;
-        if(i==2)
-            m.tipo=word;
+        if (i == 1)
+            m.tipo = word;
+        if (i == 2)
+            m.raza = word;
+        if (i == 3)
+            m.sexo = word; 
+        if (i == 4)
+            m.edad = stoi(word); 
+        if (i == 5)
+            m.nombre = word;
         i++;
     }
-    mascotaDomestica[indexMascota++]=m;
-
+    mascotaDomestica[indexMascota++] = m;
 }
 
-void showMascota()//ajustar para la nueva entrada de datos, formato y color
+void showMascota()//mostrar las mascotas guardadas en el archivo
 {
-    cout<<endl<<setw(10)<<"TIPO"<<"\t Nombre \n";
-    for (auto &&m:mascotaDomestica)
-        cout<<setw(10)<<m.tipo<<" \t "<<m.nombre<<endl;//setw formateador de datos
-}
-
-void addMascota()//ajustar para la nueva entrada de datos, formato y color
-{
-    struct Mascota m;
-    cout<<endl<<"Ingresa el tipo de mascota";
-    getline(cin, m.tipo);
-    cout<<"Ingresa el nombre de mascota: ";
-    getline(cin, m.nombre);
-    mascotaDomestica[indexMascota++]=m;
-}
-
-bool readArchivo(string pathFileName)//path ruta del archivo
-{
-    fstream f;
+    string pathArchivo = "../../data/mascotas.txt";
+    ifstream f;
     string line;
 
-
-    cout << "readArchivo:" << pathFileName<< endl;
-    f.open(pathFileName, ios_base::in);//in indica que sera solo de lectur
-    if(!f.is_open())
-        cout<<"error al abrir el archivo"<<pathFileName<<endl;
-    else
+    f.open(pathArchivo);
+    if (!f.is_open())
     {
-        while(!f.eof() )
-        {
-            getline(f, line);
-            cout<<line<<endl;
-        }
-        return true;
-    }    
+        cout << "Error al abrir el archivo " << pathArchivo << endl;
+        return;
+    }
+
+    cout << endl << setw(10) << "TIPO" << "\t RAZA" << "\t SEXO" << "\t EDAD" << "\t Nombre \n";
+    while (getline(f, line))
+    {
+        getMascota(line, ';');
+        cout << setw(10) << mascotaDomestica[indexMascota - 1].tipo << " \t " << mascotaDomestica[indexMascota - 1].raza << " \t " << mascotaDomestica[indexMascota - 1].sexo << " \t " << mascotaDomestica[indexMascota - 1].edad << " \t " << mascotaDomestica[indexMascota - 1].nombre << endl;
+    }
+
     f.close();
-    return false;
 }
-// tener cuidado de cuadrar el archivo y que no esté en edición o si este leyendo 2 archivos al mismo 
 
-bool saveMascota(string pathFileName)//path ruta del archivo         //ajustar para la nueva entrada de datos, formato y color
+
+void addMascota()
 {
-    fstream f;
-    string line;
+    Mascota m;
+    cout << endl << "Ingresa el tipo de la mascota: ";
+    getline(cin, m.tipo);
 
-    cout << "saveMascota:" <<pathFileName<< endl;
-    f.open(pathFileName, ios_base::out);//add leer
-    if(!f.is_open())
-    {    
-        cout<<"error al guardar el archivo"<<pathFileName<< endl;
+    cout << "Ingresa la raza de la mascota: ";
+    getline(cin, m.raza);
+
+    cout << "Ingresa el sexo de la mascota (M/F): ";
+    cin >> m.sexo; // Leer un solo carácter para el sexo
+
+    cout << "Ingresa la edad de la mascota: ";
+    cin >> m.edad; // Leer un número entero para la edad
+
+    cin.ignore(); // Ignorar el salto de línea después de leer el entero
+
+    cout << "Ingresa el nombre de la mascota: ";
+    getline(cin, m.nombre);
+
+    mascotaDomestica[indexMascota++] = m;
+}
+
+bool saveMascota(string pathFileName)
+{
+    ofstream f;
+    f.open(pathFileName, ios::app); // Modo "app" para agregar al final del archivo
+    if (!f.is_open())
+    {
+        cout << "Error al guardar el archivo " << pathFileName << endl;
         return false;
     }
-    
+
     for (int i = 0; i < indexMascota; i++)
     {
-        auto &&m==mascotaDomestica[i];
-       f<< m.tipo<< " ; "<< m.nomre<< endl; //<-guarda en el archivo
-    }     
-      
+        f << mascotaDomestica[i].tipo << ";" << mascotaDomestica[i].raza << ";" << mascotaDomestica[i].sexo << ";" << mascotaDomestica[i].edad << ";" << mascotaDomestica[i].nombre << endl;
+    }
+
     f.close();
-    cout<<endl<<"mascota guardada"<<endl;
-    return false;
+    cout << endl << "Todos los datos guardados exitosamente." << endl;
+    return true;
 }
 
 bool readMascota(string pathFileName)
 {
-    fstream f;
+    ifstream f;
     string line;
 
-
-    cout << "readArchivo:" <<pathFileName<< endl;
-    f.open(pathFileName, ios_base::in);
-    if(!f.is_open())
-    {    
-        cout<<"error al abrir el archivo"<<pathFileName<<endl;
+    f.open(pathFileName);
+    if (!f.is_open())
+    {
+        cout << "Error al abrir el archivo " << pathFileName << endl;
         return false;
     }
-    
-    while(!f.eof() )//mientras no este al final de la linea
+
+    while (getline(f, line))
     {
-        getline(f, line);
         getMascota(line, ';');
     }
-      
+
     f.close();
-    cout<<endl<<"lectura exitosa";
-    return false;
+    cout << endl << "Lectura exitosa." << endl;
+    return true;
 }
 
 void menu()
 {
-    int opc=0;
-    string pathArchivo="../../data//mascotas.txt";
+    int opc = 0;
+    string pathArchivo = "../../data/mascotas.txt";
 
-    cout<< "---mascotas---"<< endl;
-    cout<<"1.- Recuperar mascota"<<endl<<"2.- Agregar mascota"<<endl<<"3.- Presentar Mascota"<<endl<<"4.- Guardar mascota"<<endl<<"5.- Salir"<<endl;
-    cout<<"Ingrese una opcion: "<<endl;
-    //barraCargaCeroso0o();
-    
-    while (opc>0)
+    while (true)
     {
+        string ingreso;
+        cout << "---mascotas---" << endl;
+        cout << "1.- Recuperar mascota" << endl << "2.- Agregar mascota" << endl << "3.- Presentar Mascota" << endl << "4.- Guardar mascota" << endl << "5.- Salir" << endl;
+        cout << "Ingrese una opcion: ";
+
+        getline(cin, ingreso);
+
         try
         {
-            if (opc==1)
-            {    
-                //barraCargaPorcentaje();
-                readMascota(pathArchivo);
-            }
-            if else(opc==2)
-            {   
-                //barraCargaPorcentaje();
-                addMascota();
-            }    
-            if else(opc==3)
-            {    
-                //barraCargaPorcentaje();
-                showMascota();
-            }    
-            if else(opc==4)
+            opc = stoi(ingreso);
+
+            if (opc >= 1 && opc <= 5)
             {
-                //barraCargaPorcentaje();
-                saveMascota(pathArchivo);
-            }    
-            if else(opc==5)
-                exit;
+                switch (opc)
+                {
+                    case 1:
+                        readMascota(pathArchivo);
+                        break;
+                    case 2:
+                        addMascota();
+                        break;
+                    case 3:
+                        showMascota();
+                        break;
+                    case 4:
+                        saveMascota(pathArchivo);
+                        break;
+                    case 5:
+                        cout << "Saliendo del programa..." << endl;
+                        return;
+                }
+            }
+            else
+            {
+                cout << "Error. Opción inválida. Intentelo nuevamente." << endl;
+            }
         }
-        catch(string error)
+        catch (const exception &e)
         {
-            cout<<"Vuelve a intentarlo";
+            cout << "Error. Opción inválida. Intentelo nuevamente." << endl;
         }
     }
-    
-    
-    
-
-    
-
-    cout<< endl;
 }
 
 int main()
 {
     menu();
     return 0;
-
 }
+
+
 
 
 /*estructura de datos*/
