@@ -12,7 +12,7 @@ PROGRAMACION I SEGUNDO BIMESTRE
 #include <windows.h>
 #include <iostream>
 
-#define DELAY 10000
+#define DELAY 150
 const int animationDelay = 200;
 
 using namespace std;
@@ -35,13 +35,13 @@ string setColor(color c)
     return "";
 }
 
-string cargaFigura()
+void cargaFigura()
 {
-    const int totalFrames = 10;
+    const int vecesPresentado = 5;
     string figura = "0oo";
     string figura2 = "o0o";
 
-    for (int frame = 0; frame <= totalFrames; ++frame)
+    for (int frame = 0; frame <= vecesPresentado; ++frame)
     {
         cout << "\r" << figura << flush; 
         Sleep(DELAY);
@@ -56,8 +56,7 @@ string cargaFigura()
         figura = figura2; 
     }
 
-    cout << endl;
-    return ""; // El tipo de retorno de la función debe ser string, se devuelve una cadena vacía
+    cout << endl; 
 }
 
 struct Mascota
@@ -106,41 +105,34 @@ void showMascota()
     string pathArchivo = "../../data/mascotas.txt";
     ifstream f;
     string line;
-    int fileSize = 0;
     f.open(pathArchivo);
-
-    const int barraCarga = 1024;
-    char barra[barraCarga];
-    int porcentaje = 0;  
 
     if (!f.is_open())
     {
-        cout <<setColor(red)<< "Error al abrir el archivo " << pathArchivo << endl;
+        cout << setColor(red) << "Error al abrir el archivo " << pathArchivo << endl;
         return;
     }
 
-    f.seekg(0, ios::end); // busca el fin del archivo
-    fileSize = f.tellg();      // obtiene el tamaño del archivo en bytes
-    f.seekg(0, ios::beg); // busca el inicio del archivo
+    cout << endl;
+    cout << setw(10) << "TIPO" << "\t\t" << "RAZA" << "\t\t" << "SEXO" << "\t\t\t" << "EDAD" << "\t\t" << "NOMBRE" << endl;
 
-    
-    cout << endl << setw(10) << "TIPO" << "\t RAZA" << "\t SEXO" << "\t EDAD" << "\t NOMBRE \n";
-    while (!f.eof()) // siempre que no esté al final
+    while (getline(f, line))
     {
-        f.read(barra, barraCarga);
-        int bytesLeidos = f.gcount();
-
-        porcentaje += bytesLeidos;
-        mostrarPorcentajeCarga(porcentaje, fileSize);
-
-        for (int i = 0; i < bytesLeidos; i++)
-        {
-            cout << barra[i];
-        }
+        getMascota(line, ';');
     }
 
-    f.close();
+    for (int i = 0; i < indexMascota; i++)
+    {
+        cout <<setw(10) << mascotaDomestica[i].tipo << "\t\t"
+             << mascotaDomestica[i].raza << "\t\t"
+             << mascotaDomestica[i].sexo << "\t\t"
+             << mascotaDomestica[i].edad << "\t\t"
+             << mascotaDomestica[i].nombre << endl;
+    }
+
+    
 }
+
 
 void addMascota()
 {
@@ -168,7 +160,7 @@ void addMascota()
         }
         catch (const exception &e)
         {
-            cout << "Valor inválido. Por favor, ingresa un número entero." << endl;
+            cout << "Porfavor ingrese un numero entero" << endl;
         }
     } while (!edadValida);
 
@@ -178,26 +170,27 @@ void addMascota()
     mascotaDomestica[indexMascota++] = m;
 }
 
-
-bool saveMascota(string pathFileName)
+void saveMascota(string pathFileName)
 {
     ofstream f;
-    f.open(pathFileName);
+    f.open(pathFileName, ios::app); 
+
     if (!f.is_open())
     {
         cout << "Error al guardar el archivo " << pathFileName << endl;
-        return false;
+        return;
     }
 
-    for (int i = 0; i < indexMascota; i++)
+    int startIndex = indexMascota > 7 ? indexMascota - 7 : 0;
+    for (int i = startIndex; i < indexMascota; i++)
     {
         f << mascotaDomestica[i].tipo << ";" << mascotaDomestica[i].raza << ";" << mascotaDomestica[i].sexo << ";" << mascotaDomestica[i].edad << ";" << mascotaDomestica[i].nombre << endl;
     }
 
     f.close();
     cout << endl << "Todos los datos guardados exitosamente." << endl;
-    return true;
 }
+
 
 bool readMascota(string pathFileName)
 {
@@ -230,7 +223,7 @@ void menu()
     {
         string ingreso;
         cout << "---mascotas---" << endl;
-        cout <<setColor(blue)<<"1.- Recuperar mascota" << endl <<setColor(rosa)<<"2.- Agregar mascota" << endl << setColor(green)<<"3.- Presentar Mascota" <<setColor(naranja)<<endl <<setColor(turqueza)<< "4.- Guardar mascota" << endl <<setColor(red)<<"5.- Salir" << endl;
+        cout << setColor(blue) << "1.- Recuperar mascota" << endl << setColor(rosa) << "2.- Agregar mascota" << endl << setColor(green) << "3.- Presentar Mascota" << setColor(naranja) << endl << setColor(turqueza) << "4.- Guardar mascota" << endl << setColor(red) << "5.- Salir" << endl;
         cout << "Ingrese una opcion: ";
 
         getline(cin, ingreso);
@@ -243,37 +236,39 @@ void menu()
             {
                 switch (opc)
                 {
-                    case 1:
-                        readMascota(pathArchivo);
-                        break;
-                    case 2:
-                        addMascota();
-                        break;
-                    case 3:
-                        showMascota();
-                        break;
-                    case 4:
-                        saveMascota(pathArchivo);
-                        break;
-                    case 5:
-                        cargaFigura();
-                        return;
+                case 1:
+                    readMascota(pathArchivo);
+                    break;
+                case 2:
+                    addMascota();
+                    break;
+                case 3:
+                    showMascota();
+                    break;
+                case 4:
+                    saveMascota(pathArchivo);
+                    break;
+                case 5:
+                    cargaFigura();
+                    return;
                 }
             }
             else
             {
-                cout << "Opción inválida, por favor intentelo nuevamente." << endl;
+                cout << "Por favor intentelo nuevamente." << endl;
             }
         }
         catch (const exception &e)
         {
-            cout << "Opción inválida, por favor inténtelo nuevamente." << endl;
+            cout << "Por favor intentelo nuevamente." << endl;
         }
     }
 }
 
 int main()
 {
+    cargaFigura();
+    //mostrarPorcentajeCarga();
     menu();
     return 0;
 }
