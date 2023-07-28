@@ -1,4 +1,6 @@
-perro;max ito
-gato;dani
-caballo;Rayo
-pez;nemo
+TIPO;RAZA;SEXO;EDAD;NOMBRE;
+perro;doberman;masculino;10;max ito
+felino;gato;femenido;2;dani
+cuadrupedo;caballo;masculino;10;Macquin
+pez;payaso;femenino;1;nemo
+ungulado;oveja;femenino;5;beeee
