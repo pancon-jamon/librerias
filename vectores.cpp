@@ -1,5 +1,5 @@
 /*
-1:34:24
+1:40
 ARCHIVOS DE TEXTO, 1/AG/2023
 CLAUDIA COELLO
 PROGRAMACION I SEGUNDO BIMESTRE
@@ -25,8 +25,8 @@ capacity()
 resize(redimencionar)
 empty(vaciar)
 */
-#include "iostream"
-#include "vector"
+#include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -46,45 +46,61 @@ void defVectorInt()
         cout<<n<<" ";
 
 }
+void defVectorIntOpc()
+{
+    vector <int> vRepetido(5,30);//un vetor que empieza con 5 ceros
+    cout<<"Suma antes de presentar";
+    for (int i : vRepetido)//si queremos que no cambien agregar un constant
+    cout<<++i<<" ";//presenta 31,31,31,31,31
 
+    cout<<"Suma despues de presentar";
+    for (int i : vRepetido)
+    cout<<i++<<" ";//presenta 30,31,32,33,34
+
+    cout<<"Sin sumar:";
+    for (const int& i : vRepetido)//si queremos que no cambien agregar un constant
+    cout<<i<<" ";//presenta 30,30,30,30,30
+
+}
 void defVectorString()
 {
-     string str;
-    vector <string> vNombresAlum;//={"pepe","juan","ana","lucia"}
+    string str;
+    vector <string> vNombresAlum={"pepe","juan","ana","lucia"};//
 
     for (int i = 0; i < 5; i++)//agregar 5 nombres
     {
-        cout<<endl<<"Ingrese un nombre: "<<endl;
+        cout<<endl<<"AGREGAR un nombre: "<<endl;
         cin>>str;
         vNombresAlum.push_back(str);
     }
     
     for (string s : vNombresAlum)
-    cout<<s<<", ";
+        cout<< s <<", ";
 
-    cout<<endl<<"Elimine un nombre: "<<endl;
+    cout<<endl<<"ELIMINAR : "<<endl;
     vNombresAlum.pop_back();//pop_back sacar valor
     vNombresAlum.pop_back();
 
     for (string s : vNombresAlum)
-    cout<<s<<", ";
+        cout<< s <<", ";
+
+    cout<<endl<<"ACCEDER ";
+    cout<<endl<<vNombresAlum[2];
+    cout<<endl<<vNombresAlum.at(2);//valida el tamaño de la lista, puede traer alguna basura
 }
 
 int main()
 {
-    defVectorInt();
+    // defVectorInt();
+
+    //-[ok] Agregar elemento
+    //-[ok] Elementos de acceso
+    //-[] Cambiar elementos
+    //-[ok] Quitar elementos
+
     defVectorString();
 
-    vector <int> vRepetido(5,30);//un vetor que empieza con 5 ceros
-
-    for (int i : vRepetido)//si queremos que no cambien agregar un constant
-    cout<<++i<<" ";//presenta 31,31,31,31,31
-    
-    for (int i : vRepetido)
-    cout<<i++<<" ";//presenta 30,31,32,33,34
-
-    for (const i : vRepetido)//si queremos que no cambien agregar un constant
-    cout<<i<<" ";//presenta 30,30,30,30,30
+    // defVectorIntOpc();
 
     cout<<endl;
     return 0;   
