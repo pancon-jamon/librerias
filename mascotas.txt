@@ -1,6 +1,6 @@
-TIPO;RAZA;SEXO;EDAD;NOMBRE;
-perro;doberman;masculino;10;max ito
-felino;gato;femenido;2;dani
-cuadrupedo;caballo;masculino;10;Macquin
-pez;payaso;femenino;1;nemo
-ungulado;oveja;femenino;5;beeee
+ID_CLIENTE;TIPO;RAZA;SEXO;EDAD;NOMBRE;
+1;perro;doberman;masculino;10;max ito
+1;felino;gato;femenido;2;dani
+2;cuadrupedo;caballo;masculino;10;Macquin
+2;pez;payaso;femenino;1;nemo
+3;ungulado;oveja;femenino;5;beeee
