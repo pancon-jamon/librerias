@@ -11,6 +11,7 @@ PROGRAMACION I SEGUNDO BIMESTRE
 #include <string>
 #include <windows.h>
 #include <iostream>
+#include "../lib/patString.h"
 
 #define DELAY 150
 const int animationDelay = 200;
@@ -71,33 +72,19 @@ struct Mascota
 Mascota mascotaDomestica[7];
 int indexMascota = 0;
 
-void getMascota(string lineArchivo, char del)
+struct Persona
 {
-    Mascota m;
-    stringstream ss(lineArchivo);
-    string word;
-    int i = 1;
-    while (getline(ss, word, del))
-    {
-        if (i == 1)
-            m.tipo = word;
-        else if (i == 2)
-            m.raza = word;
-        else if (i == 3)
-            m.sexo = word;
-        else if (i == 4)
-            m.edad = stoi(word);
-        else if (i == 5)
-            m.nombre = word;
-        i++;
-    }
-    mascotaDomestica[indexMascota++] = m;
+    int ID;
+    string nombre;
+    string cedula;
+    Mascota mascotaDomestica[5];
 }
+
 
 void mostrarPorcentajeCarga(int bytesLeidos, int fileSize)
 {
     float porcentaje = (float)bytesLeidos / fileSize * 100;
-    cout << "Progress: " << fixed << setprecision(2) << porcentaje << "%" << endl;
+    cout << "Progreso: " << fixed << setprecision(2) << porcentaje << "%" << endl;
 }
 
 void showMascota()
@@ -116,21 +103,33 @@ void showMascota()
     cout << endl;
     cout << setw(10) << "TIPO" << "\t\t" << "RAZA" << "\t\t" << "SEXO" << "\t\t\t" << "EDAD" << "\t\t" << "NOMBRE" << endl;
 
+    bool firstLine = true; // Variable para verificar si es la primera línea
+
     while (getline(f, line))
     {
-        getMascota(line, ';');
+        if (firstLine)
+        {
+            firstLine = false;
+            continue; // Omitir la primera línea
+        }
+
+        struct Mascota m;
+        vector<string> vDato;
+        // getMascota(line, ';');
+
+        vDato = SplitToVector(line, ';');
+
+        m.tipo =ppToCapitalStr (vDato.at(0));
+        m.nombre =ppToCapitalStr (vDato.at(1));
+        m.sexo =ppToCapitalStr (vDato.at(2));
+        m.edad = stoi(vDato.at(3));
+        m.raza =ppToCapitalStr (vDato.at(4));
+        cout << endl<<"     "  << m.tipo<<"           "  << m.nombre<<"           "  << m.sexo <<"              "  << m.edad <<"                  "  << m.raza;
+        // cout << endl << "Tipo:   " << m.tipo << "\t Nombre:" << m.nombre << "\t Sexo:" << m.sexo << "\t Edad:" << m.edad << "\t Raza:" << m.raza;
     }
 
-    for (int i = 0; i < indexMascota; i++)
-    {
-        cout <<setw(10) << mascotaDomestica[i].tipo << "\t\t"
-             << mascotaDomestica[i].raza << "\t\t"
-             << mascotaDomestica[i].sexo << "\t\t"
-             << mascotaDomestica[i].edad << "\t\t"
-             << mascotaDomestica[i].nombre << endl;
-    }
-
-    
+    f.close();
+    cout << endl << "Lectura exitosa." << endl;
 }
 
 
@@ -191,11 +190,12 @@ void saveMascota(string pathFileName)
     cout << endl << "Todos los datos guardados exitosamente." << endl;
 }
 
-
 bool readMascota(string pathFileName)
 {
     ifstream f;
     string line;
+    int fileSize = 0;
+    int bytesRead = 0;
 
     f.open(pathFileName);
     if (!f.is_open())
@@ -204,9 +204,29 @@ bool readMascota(string pathFileName)
         return false;
     }
 
-    while (getline(f, line))
+    // Obtener el tamaño total del archivo
+    f.seekg(0, ios::end);
+    fileSize = f.tellg();
+    f.seekg(0, ios::beg);
+
+    while (!f.eof())
     {
-        getMascota(line, ';');
+        struct Mascota m;
+        vector<string> vDato;
+        getline(f, line);
+        bytesRead += line.size() + 1; // Sumar el tamaño de la línea y un caracter de nueva línea
+        
+        vDato = SplitToVector(line, ';');
+
+        m.tipo = vDato.at(0);
+        m.nombre = vDato.at(1);
+        m.sexo = vDato.at(2);
+        m.edad = stoi(vDato.at(3));
+        m.raza = vDato.at(4);
+
+        // cout << endl << "Tipo:" << m.tipo << "\t Nombre:" << m.nombre << "\t Sexo:" << m.sexo << "\t Edad:" << m.edad << "\t Raza:" << m.raza;
+
+        mostrarPorcentajeCarga(bytesRead, fileSize); // Mostrar el porcentaje de carga real
     }
 
     f.close();
@@ -222,9 +242,9 @@ void menu()
     while (true)
     {
         string ingreso;
-        cout << "---mascotas---" << endl;
+        cout << "\t\t---mascotas---" << endl;
         cout << setColor(blue) << "1.- Recuperar mascota" << endl << setColor(rosa) << "2.- Agregar mascota" << endl << setColor(green) << "3.- Presentar Mascota" << setColor(naranja) << endl << setColor(turqueza) << "4.- Guardar mascota" << endl << setColor(red) << "5.- Salir" << endl;
-        cout << "Ingrese una opcion: ";
+        cout <<setColor(naranja) <<"Ingrese una opcion: ";
 
         getline(cin, ingreso);
 
