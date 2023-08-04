@@ -1,161 +1,314 @@
 /*
-1:40
-ARCHIVOS DE TEXTO, 1/AG/2023
+1:34:24
+ARCHIVOS DE TEXTO, 2/AG/2023
 CLAUDIA COELLO
 PROGRAMACION I SEGUNDO BIMESTRE
+PUNTEROS: controlar la posicion de memoria, ayuda a que el computador sepa exactamente donde puso un valor basada en una referencia de memoria
+El computador suele guardaar los datos donde sea dependiendo donde este el puntero y esto toma tiempo
+Los punteros estan destnados a moverse en un espacio o segmento de memoria, cuando hacemos punteros de un tipo de dato este tiene que ser ese tipo de dato(char, int, double)
+los punteros estan destinados a este tipo de datos y no puedo leerlo si no lo es, puede entrar en el espacio siempre que sean del mismo tipo, los del tipo null no apunta a nada
+para que pueda acordarse donde dejo el dato tiene que tener una referencia(la libreta de apuntes de la cpu) de la direccion, a menudo solo deja los datos desperdigados
+los punteos no guardan datos, solo busca las posciciones*/
+// #include <iostream>
+// #include <vector>
+// using namespace std;
 
-modificadores:
-v.front()
-v.back()
-push_back/front <-pone al ultimo o al inicio
-pop_back/front<-saca el ultimo o el primer elemento
-assign()
-insert(posicion)
-erase(posicion)
-swap(cambio de posicion)
-clear()<-borrar toda la lista
+// void defPuntero()//esta entrendo a la posicion de memoria y le cambia el valor
+// {
+//     int a = 10;
+//     int b=20;
+//     int *pi=NULL;//POR DEFECTO EL NULL PERO PARA ESTAR SEGUROS
 
-iteradores:permite ingresar , punteros
-begin()
-end()
+//     pi=&a;
 
-capacidad:definir capacidad de almacenamiento
-size(tamaño)
-capacity()
-resize(redimencionar)
-empty(vaciar)
-*/
+//     cout<<endl<<endl
+//         <<"Valor de a: "<< a <<endl
+//         <<"referencia a: "<< &a <<endl
+//         <<"----------------------"
+//         <<"refer *pi_a"<< pi <<endl
+//         <<"valor *pi_a"<< *pi <<endl;
+
+//     *pi=0;
+//         cout<<"cambio a:"<<*pi +20<<endl;
+
+//     pi=&b;
+//     cout<<"Valor de b: "<<b<<endl 
+//         <<"referencia b: "<< &b <<endl  
+//         <<"----------------------"
+//         <<"refer pi_b"<< pi <<endl
+//         <<"valor *pi_b"<<*pi<<endl;
+//     *pi=0;
+//     cout<<"cambio b: "<<b<<endl;
+//     cout<<"puntero *pi_b"<< *pi <<endl;
+// }
+
+// int funcionPorValor(int valor)
+// {
+//     valor= valor + 18;//suma 18
+//     return valor;
+// }
+
+// int funcionPuntero(int *valor)
+// {
+//     *valor= *valor + 18;//suma 18 a la posicion
+//     return *valor;
+// }
+
+// void tipoParametrosPunteros()
+// {
+//     int numero=10;
+//     int *pi= NULL;
+
+//     cout<<"----------------------"<<endl<<endl;
+//     cout<<"Antes de funcionPorValor, numero = "<<numero<<endl;
+//     funcionPorValor(numero);
+//     cout<<"despues de funcionPorValor, numero = "<<numero<<endl;
+
+//     pi=&numero;
+//     cout<<"----------------------"<<endl<<endl;
+//     cout<<"Antes de funcionPuntero, numero = "<<numero<<endl;
+//     funcionPuntero(pi);
+//     cout<<"despues de funcionPuntero, numero = "<<numero<<endl;
+
+//     cout<<"----------------------"<<endl<<endl;
+//     cout<<"Antes de funcionPuntero, numero = "<<numero<<endl;
+//     funcionPuntero(&numero);
+//     cout<<"despues de funcionPuntero, numero = "<<numero<<endl;
+// }
+
+// void arrayPunteros()
+// {
+//     string* titulos= NULL;//inicia en nulo
+//     string* autores = NULL;
+//     int size;
+//     string entrada;
+
+//     //punteros doble
+//     string** libros;
+//     int colums = 2;
+
+//     cout<<"Cuantos libros deseas ingresar?";
+//     getline(cin, entrada);
+//     size= stoi(entrada);
+
+//     //dimensionar arrays
+//     titulo = new string[size];
+//     autores = new string[size];
+
+//     //dimensionar arrays dobles
+//     titulo = new string*[size];//asignar numero de filas
+
+//     cout<<endl<<"Ingrese la sig informacion"<<endl;
+//     for (int i = 0; i < size; i++)
+//     {
+//         string titulo,autor;
+//         cout<<"\n ********Libro"<<i+1<<"******\n";
+//         cout<<"Titulo:";
+//         getline(cin,autor);
+//         autores[i]=autor;
+
+//         //en array doble
+//         libros[i]= new string[colums];//cada fila tendra 2 columnas
+//         libros[i][0]= titulo;
+//         libros[i][1]= autor;
+//     }
+//     cout<<"Titulo \t Autor"<<endl;
+//     for (int i = 0; i < size; i++)
+//         cout<<libros[i][0]<<"\t"<<libros[i][1]<<endl;
+    
+//     //liberar espacion de los punteros
+//     delete [] titulos;
+//     delete [] autores;
+//     titulos= NULL;
+//     autores = NULL;
+
+//     //punteros dobles(debe recorrer fila por fila)
+//     for (int i = 0; i < size; i++)
+//         delete [] libros[i];//cada  fila de libros es otro array de punteros
+    
+//     //luego de limpiar las columnas, quitar la fila unica que quedo
+//     delete [] libros;
+    
+// }
+
+// int main()
+// {
+//     defPuntero();
+//     int numero=10;
+//     int *pi=NULL;//un puntero no puede recibir valores
+
+//     cout<<"Numero antes= "<<numero<<endl;
+//     funcionPorValor(numero);//el numero nunca cambio, entro y salio de la funcion
+//     cout<<"numero despues="<<numero<<endl;
+
+//     pi=&numero;
+//     cout<<"\t -----------"<<endl<<"Numero antes= "<<numero<<endl;
+//     funcionPuntero(pi);//no cambia pero lo encuentra con el puntero
+//     cout<<"numero despues="<<numero<<endl;
+
+//     cout<<"\t -----------"<<endl<<"Numero antes= "<<numero<<endl;
+//     funcionPuntero(&numero);//le envio la referencia de memoria
+//     cout<<"numero despues="<<numero<<endl;
+//     tipoParametrosPunteros();
+//     cout<<endl;
+//     return 0;
+// }
+
+
+// //punteros dobles es como matriz cuadratica
 #include <iostream>
 #include <vector>
-
 using namespace std;
 
-void defVectorInt()
+void defPuntero()
 {
-    int numero[]={2,3,4,9};//es lo mismo que vector
-    vector<int> enteros={2,3,4,9};//vector+el tipo de dato+nombre(inicializando vacio)+valores(opc); puedo agregar datos y cambiarlo, con un array no puedo cambiarlo
+    int a = 10;
+    int b = 20;
+    int *pi = NULL; // POR DEFECTO EL NULL PERO PARA ESTAR SEGUROS
 
-    enteros.push_back(12);//agrega el 12 al vector
-    cout<<endl<<"enteros: "<<endl;
-    for (int n : enteros)//for para presentar los datos
-        cout<<n<<" ";
-    
-    cout<<endl<<"numero"<<endl;
-    numero[12]=4;
-    for (int n : numero)//for para presentar los datos
-        cout<<n<<" ";
+    pi = &a;
 
+    cout << endl
+         << endl
+         << "Valor de a: " << a << endl
+         << "referencia a: " << &a << endl
+         << "----------------------"
+         << "refer *pi_a" << pi << endl
+         << "valor *pi_a" << *pi << endl;
+
+    *pi = 0;
+    cout << "cambio a: " << *pi + 20 << endl;
+
+    pi = &b;
+    cout << "Valor de b: " << b << endl
+         << "referencia b: " << &b << endl
+         << "----------------------"
+         << "refer pi_b" << pi << endl
+         << "valor *pi_b" << *pi << endl;
+    *pi = 0;
+    cout << "cambio b: " << b << endl;
+    cout << "puntero *pi_b" << *pi << endl;
 }
-void defVectorIntOpc()
+
+int funcionPorValor(int valor)
 {
-    vector <int> vRepetido(5,30);//un vetor que empieza con 5 ceros
-    cout<<"Suma antes de presentar";
-    for (int i : vRepetido)//si queremos que no cambien agregar un constant
-    cout<<++i<<" ";//presenta 31,31,31,31,31
-
-    cout<<"Suma despues de presentar";
-    for (int i : vRepetido)
-    cout<<i++<<" ";//presenta 30,31,32,33,34
-
-    cout<<"Sin sumar:";
-    for (const int& i : vRepetido)//si queremos que no cambien agregar un constant
-    cout<<i<<" ";//presenta 30,30,30,30,30
-
+    valor = valor + 18;
+    return valor;
 }
-void defVectorString()
-{
-    string str;
-    vector <string> vNombresAlum={"pepe","juan","ana","lucia"};//
 
-    for (int i = 0; i < 5; i++)//agregar 5 nombres
+int funcionPuntero(int *valor)
+{
+    *valor = *valor + 18;
+    return *valor;
+}
+
+void tipoParametrosPunteros()
+{
+    int numero = 10;
+    int *pi = NULL;
+
+    cout << "----------------------" << endl
+         << endl;
+    cout << "Antes de funcionPorValor, numero = " << numero << endl;
+    numero = funcionPorValor(numero); // Asignar el valor devuelto por la función a 'numero'
+    cout << "después de funcionPorValor, numero = " << numero << endl;
+
+    pi = &numero;
+    cout << "----------------------" << endl
+         << endl;
+    cout << "Antes de funcionPuntero, numero = " << numero << endl;
+    funcionPuntero(pi);
+    cout << "después de funcionPuntero, numero = " << numero << endl;
+
+    cout << "----------------------" << endl
+         << endl;
+    cout << "Antes de funcionPuntero, numero = " << numero << endl;
+    funcionPuntero(&numero);
+    cout << "después de funcionPuntero, numero = " << numero << endl;
+}
+
+void arrayPunteros()
+{
+    string *titulos = NULL;
+    string *autores = NULL;
+    int size;
+    string entrada;
+
+    // Punteros dobles
+    string **libros;
+    int colums = 2;
+
+    cout << "Cuantos libros deseas ingresar?";
+    getline(cin, entrada);
+    size = stoi(entrada);
+
+    // Dimensionar arrays
+    titulos = new string[size];
+    autores = new string[size];
+
+    // Dimensionar arrays dobles
+    libros = new string *[size]; // Asignar numero de filas
+
+    cout << endl
+         << "Ingrese la sig informacion" << endl;
+    for (int i = 0; i < size; i++)
     {
-        cout<<endl<<"AGREGAR un nombre: "<<endl;
-        cin>>str;
-        vNombresAlum.push_back(str);
+        string titulo, autor;
+        cout << "\n ********Libro" << i + 1 << "******\n";
+        cout << "Titulo:";
+        getline(cin, titulo);
+        titulos[i] = titulo;
+
+        // En array doble
+        libros[i] = new string[colums]; // Cada fila tendrá 2 columnas
+        libros[i][0] = titulo;
+        libros[i][1] = autor;
     }
-    
-    for (string s : vNombresAlum)
-        cout<< s <<", ";
 
-    cout<<endl<<"ELIMINAR : "<<endl;
-    vNombresAlum.pop_back();//pop_back sacar valor
-    vNombresAlum.pop_back();
+    cout << "Titulo \t Autor" << endl;
+    for (int i = 0; i < size; i++)
+        cout << libros[i][0] << "\t" << libros[i][1] << endl;
 
-    for (string s : vNombresAlum)
-        cout<< s <<", ";
+    // Liberar espacio de los punteros
+    delete[] titulos;
+    delete[] autores;
+    titulos = NULL;
+    autores = NULL;
 
-    cout<<endl<<"ACCEDER ";
-    cout<<endl<<vNombresAlum[12];//funcionan iguales
-    cout<<endl<<vNombresAlum.at(12);//valida el tamaño de la lista, puede traer alguna basura, puede ver cuando hay problemas
+    // Punteros dobles (debe recorrer fila por fila)
+    for (int i = 0; i < size; i++)
+        delete[] libros[i]; // Cada fila de libros es otro array de punteros
 
-    vNombresAlum.at(2)="ANA";
-    vNombresAlum[1]="juana";
-    cout<<endl<<vNombresAlum.at(1);
-    cout<<endl<<vNombresAlum.at(2);
+    // Luego de limpiar las columnas, quitar la fila única que quedó
+    delete[] libros;
 }
 
-void iterarVector()
+void cambioDePunteros()
 {
-    vector <int> num={1,2,3,4};
-    vector <int> ::iterator iter;
-    iter=num.begin();
+    int numero = 10;
+    int *pi = NULL;
 
-    cout<<"num[0]"<<*iter;
-    iter++;
-    cout<<"num[1]"<<*iter;
+    cout << "Numero antes= " << numero << endl;
+    numero = funcionPorValor(numero); // Asignar el valor devuelto por la función a 'numero'
+    cout << "numero después= " << numero << endl;
 
-    iter=num.begin()+2;
-    cout<<"num[2]"<<*iter;
-    iter=num.end()-1;
-    cout<<"num[3]"<<*iter;
+    pi = &numero;
+    cout << "\t -----------" << endl
+         << "Numero antes= " << numero << endl;
+    funcionPuntero(pi);
+    cout << "numero después= " << numero << endl;
 
-    cout<<"use iterator for loop"<<endl;
-    for (iter = num.begin(), iter != num.end(), ++iter)
-        cout<<*iter<<" ";
-
-    cout<<"\n Size"<<num.size();
-    cout<<"\n Capacidad"<<num.capacity();
-    cout<<"\n Tamaño maximo"<<num.max_size();
-
-    if(num.empty())
-        cout<<"Vector vacio";
-    else    
-        cout<<"Vector no vacio";
-
-    num.shrink_to_fit();
-    cout<<"\n num elementos estan con shrink_to_fit";
-    for (auto it = num.begin(); it != num.end(); it++)
-        cout<<*it<<" ";
-
-    //Insertar al inicio
-    cout<<"inserte algo"<<endl;
-    num.emplace(num.begin(),5);
-    num.emplace(num.begin()+3,5);
-    num.emplace(num.end(),5);
-    for (auto it = num.begin(); it!=num.end(); it++)
-        cout<<*it<<" ";
-
-    num.clear();
-    cout<<"\n num.clear"<<endl;
-    for (auto it = num.begin(); it!=num.end(); it++)
-    cout<<*it<<endl;
-   
+    cout << "\t -----------" << endl
+         << "Numero antes= " << numero << endl;
+    funcionPuntero(&numero);
+    cout << "numero después= " << numero << endl;
+    tipoParametrosPunteros();
+    cout << endl;
 }
 
 int main()
 {
-    // defVectorInt();
-
-    //-[ok] Agregar elemento
-    //-[ok] Elementos de acceso
-    //-[] Cambiar elementos
-    //-[ok] Quitar elementos
-
-    defVectorString();
-
-    // defVectorIntOpc();
-
-    cout<<endl;
-    return 0;   
+    defPuntero();
+    arrayPunteros();
+    return 0;
 }
-
