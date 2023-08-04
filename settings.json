@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "*.excalidraw": "json",
+        "*.excalidrawlib": "json",
+        "iostream": "cpp",
+        "ostream": "cpp",
+        "istream": "cpp",
+        "iosfwd": "cpp",
+        "vector": "cpp"
+    }
+}
