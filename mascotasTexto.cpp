@@ -11,12 +11,16 @@ PROGRAMACION I SEGUNDO BIMESTRE
 #include <string>
 #include <windows.h>
 #include <iostream>
+#include <vector>
 #include "../lib/patString.h"
 
 #define DELAY 150
 const int animationDelay = 200;
 
 using namespace std;
+
+const string pathMascota="../data/mascotas.txt";
+const string pathCliente="../data/clientes.txt";
 
 enum color { blue = 1, green, turqueza, red, rosa, naranja, negro, gris };
 
@@ -62,6 +66,7 @@ void cargaFigura()
 
 struct Mascota
 {
+    int idCliente;
     string tipo;
     string raza;
     string sexo;
@@ -69,17 +74,16 @@ struct Mascota
     string nombre;
 };
 
-Mascota mascotaDomestica[7];
-int indexMascota = 0;
-
-struct Persona
+struct Cliente
 {
     int ID;
     string nombre;
     string cedula;
-    Mascota mascotaDomestica[5];
-}
-
+    vector<Mascota> pets;
+};
+vector<Cliente> cliente;
+Mascota mascotaDomestica[7];
+int indexMascota = 0;
 
 void mostrarPorcentajeCarga(int bytesLeidos, int fileSize)
 {
@@ -119,19 +123,21 @@ void showMascota()
 
         vDato = SplitToVector(line, ';');
 
-        m.tipo =ppToCapitalStr (vDato.at(0));
-        m.nombre =ppToCapitalStr (vDato.at(1));
-        m.sexo =ppToCapitalStr (vDato.at(2));
-        m.edad = stoi(vDato.at(3));
-        m.raza =ppToCapitalStr (vDato.at(4));
-        cout << endl<<"     "  << m.tipo<<"           "  << m.nombre<<"           "  << m.sexo <<"              "  << m.edad <<"                  "  << m.raza;
+        m.idCliente= stoi(vDato.at(0))
+        m.tipo     = ppToCapitalStr (vDato.at(1));
+        m.nombre   = ppToCapitalStr (vDato.at(2));
+        m.sexo     = ppToCapitalStr (vDato.at(3));
+        m.edad     = stoi(vDato.at(4));
+        m.raza     = ppToCapitalStr (vDato.at(5));
+
+        if(m.idCliente==2)
+            cout << endl<<"     "  << m.tipo<<"           "  << m.nombre<<"           "  << m.sexo <<"              "  << m.edad <<"                  "  << m.raza;
         // cout << endl << "Tipo:   " << m.tipo << "\t Nombre:" << m.nombre << "\t Sexo:" << m.sexo << "\t Edad:" << m.edad << "\t Raza:" << m.raza;
     }
 
     f.close();
     cout << endl << "Lectura exitosa." << endl;
 }
-
 
 void addMascota()
 {
@@ -292,3 +298,126 @@ int main()
     menu();
     return 0;
 }
+/*
+Agregar la librería <vector> para utilizar el contenedor vector.
+Agregar el archivo de cabecera "../lib/patString.h" para utilizar funciones como SplitToVector, ppToCapitalStr, etc.
+Definir un constructor para la estructura Mascota, ya que es una buena práctica tener un constructor para inicializar los miembros de la estructura.
+Agregar un constructor para la estructura Cliente para evitar que sus miembros tengan valores no deseados.
+Cambiar el tipo de dato del atributo idCliente en la estructura Mascota a string, ya que en el archivo de texto, este campo parece ser un número de cliente en formato de cadena.
+Cambiar el tipo de dato del atributo ID en la estructura Cliente a int, ya que en el archivo de texto, este campo parece ser un número de cliente.
+Agregar una función para cargar datos desde el archivo de texto "../data/mascotas.txt" al vector cliente.
+Agregar una función para guardar los datos en el vector cliente en el archivo de texto "../data/mascotas.txt".
+Corregir la función mostrarPorcentajeCarga para que el porcentaje se muestre con dos decimales después del punto.
+A continuación, el código corregido y con las mejoras mencionadas:
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+#include <vector>
+#include <windows.h>
+#include "../lib/patString.h"
+
+#define DELAY 150
+const int animationDelay = 200;
+
+using namespace std;
+
+// El resto del código permanece igual...
+
+struct Mascota
+{
+    int idCliente;
+    string tipo;
+    string raza;
+    string sexo;
+    int edad;
+    string nombre;
+
+    // Constructor de Mascota
+    Mascota(int idCliente, string tipo, string raza, string sexo, int edad, string nombre)
+        : idCliente(idCliente), tipo(tipo), raza(raza), sexo(sexo), edad(edad), nombre(nombre) {}
+};
+
+struct Cliente
+{
+    int ID;
+    string nombre;
+    string cedula;
+    vector<Mascota> pets;
+
+    // Constructor de Cliente
+    Cliente(int ID, string nombre, string cedula)
+        : ID(ID), nombre(nombre), cedula(cedula) {}
+};
+
+vector<Cliente> cliente;
+Mascota mascotaDomestica[7];
+int indexMascota = 0;
+
+// Función para cargar datos desde el archivo
+void cargarDatos()
+{
+    ifstream archivo("../data/mascotas.txt");
+    if (!archivo)
+    {
+        cout << "Error al abrir el archivo" << endl;
+        return;
+    }
+
+    cliente.clear();
+
+    string linea;
+    getline(archivo, linea); // Omitir la primera línea
+
+    while (getline(archivo, linea))
+    {
+        vector<string> vDato = SplitToVector(linea, ';');
+        int idCliente = stoi(vDato.at(0));
+        string tipo = ppToCapitalStr(vDato.at(1));
+        string nombre = ppToCapitalStr(vDato.at(2));
+        string sexo = ppToCapitalStr(vDato.at(3));
+        int edad = stoi(vDato.at(4));
+        string raza = ppToCapitalStr(vDato.at(5));
+
+        cliente.emplace_back(idCliente, tipo, nombre, sexo, edad, raza);
+    }
+
+    archivo.close();
+}
+
+// Función para guardar los datos en el archivo
+void guardarDatos()
+{
+    ofstream archivo("../data/mascotas.txt");
+    if (!archivo)
+    {
+        cout << "Error al guardar el archivo" << endl;
+        return;
+    }
+
+    archivo << "idCliente;Tipo;Nombre;Sexo;Edad;Raza" << endl;
+
+    for (const auto &cliente : cliente)
+    {
+        for (const auto &mascota : cliente.pets)
+        {
+            archivo << cliente.ID << ";" << mascota.tipo << ";" << mascota.nombre << ";"
+                    << mascota.sexo << ";" << mascota.edad << ";" << mascota.raza << endl;
+        }
+    }
+
+    archivo.close();
+    cout << "Todos los datos guardados exitosamente." << endl;
+}
+
+// Resto del código (funciones showMascota, addMascota, menu, main, etc.) permanece igual...
+
+int main()
+{
+    cargaFigura();
+    cargarDatos();
+    menu();
+    guardarDatos();
+    return 0;
+}
+
+*/
