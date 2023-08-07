@@ -12,7 +12,7 @@ PROGRAMACION I SEGUNDO BIMESTRE
 #include <windows.h>
 #include <iostream>
 #include <vector>
-#include "../lib/patString.h"
+#include "../lib/ccString.h"
 
 #define DELAY 150
 const int animationDelay = 200;
@@ -23,15 +23,6 @@ const string pathMascota="../data/mascotas.txt";
 const string pathCliente="../data/clientes.txt";
 
 enum color { blue = 1, green, turqueza, red, rosa, naranja, negro, gris };
-
-void clearConsole()
-{
-    #ifdef _WIN32
-        system("cls"); // Para Windows
-    #else
-        system("clear"); // Para Linux o macOS
-    #endif
-}
 
 string setColor(color c)
 {
@@ -82,25 +73,22 @@ struct Cliente
     vector<Mascota> pets;
 };
 vector<Cliente> cliente;
-Mascota mascotaDomestica[7];
-int indexMascota = 0;
 
-void mostrarPorcentajeCarga(int bytesLeidos, int fileSize)
-{
-    float porcentaje = (float)bytesLeidos / fileSize * 100;
-    cout << "Progreso: " << fixed << setprecision(2) << porcentaje << "%" << endl;
-}
+Mascota mascotaDomestica[7];
+Cliente clienteConMascota[7];
+
+int indexMascota = 0;
+int indexCliente=0;
 
 void showMascota()
 {
-    string pathArchivo = "../../data/mascotas.txt";
     ifstream f;
     string line;
-    f.open(pathArchivo);
+    f.open(pathMascota);
 
     if (!f.is_open())
     {
-        cout << setColor(red) << "Error al abrir el archivo " << pathArchivo << endl;
+        cout << setColor(red) << "Error al abrir el archivo " << pathMascota << endl;
         return;
     }
 
@@ -123,7 +111,7 @@ void showMascota()
 
         vDato = SplitToVector(line, ';');
 
-        m.idCliente= stoi(vDato.at(0))
+        m.idCliente= stoi(vDato.at(0));
         m.tipo     = ppToCapitalStr (vDato.at(1));
         m.nombre   = ppToCapitalStr (vDato.at(2));
         m.sexo     = ppToCapitalStr (vDato.at(3));
@@ -133,6 +121,48 @@ void showMascota()
         if(m.idCliente==2)
             cout << endl<<"     "  << m.tipo<<"           "  << m.nombre<<"           "  << m.sexo <<"              "  << m.edad <<"                  "  << m.raza;
         // cout << endl << "Tipo:   " << m.tipo << "\t Nombre:" << m.nombre << "\t Sexo:" << m.sexo << "\t Edad:" << m.edad << "\t Raza:" << m.raza;
+    }
+
+    f.close();
+    cout << endl << "Lectura exitosa." << endl;
+}
+
+void showCliente()
+{
+    ifstream f;
+    string line;
+    f.open(pathCliente);
+
+    if (!f.is_open())
+    {
+        cout << setColor(red) << "Error al abrir el archivo " << pathCliente << endl;
+        return;
+    }
+
+    cout << endl;
+    cout << setw(10) << "ID" << "\t\t" << "CEDULA" << "\t\t" << "NOMBRE" << endl;
+
+    bool firstLine = true;
+
+    while (getline(f, line))
+    {
+        if (firstLine)
+        {
+            firstLine = false;
+            continue;
+        }
+
+        struct Cliente c;
+        vector<string> vDatoCliente;
+
+        vDatoCliente = SplitToVector(line, ';');
+
+        c.ID = stoi(vDatoCliente.at(0));
+        c.nombre = ppToCapitalStr(vDatoCliente.at(1));
+        c.cedula = vDatoCliente.at(2);
+
+        if (c.ID == 2)
+            cout << endl << "     " << c.ID << "           " << c.cedula << "           " << c.nombre;
     }
 
     f.close();
@@ -175,21 +205,40 @@ void addMascota()
     mascotaDomestica[indexMascota++] = m;
 }
 
-void saveMascota(string pathFileName)
+void saveMascota()
 {
     ofstream f;
-    f.open(pathFileName, ios::app); 
+    f.open(pathMascota, ios::app);
 
     if (!f.is_open())
     {
-        cout << "Error al guardar el archivo " << pathFileName << endl;
+        cout << "Error al guardar el archivo " << pathMascota << endl;
         return;
     }
 
-    int startIndex = indexMascota > 7 ? indexMascota - 7 : 0;
-    for (int i = startIndex; i < indexMascota; i++)
+    for (int i = 0; i < indexMascota; i++)
     {
-        f << mascotaDomestica[i].tipo << ";" << mascotaDomestica[i].raza << ";" << mascotaDomestica[i].sexo << ";" << mascotaDomestica[i].edad << ";" << mascotaDomestica[i].nombre << endl;
+        f << mascotaDomestica[i].idCliente << ";" << mascotaDomestica[i].tipo << ";" << mascotaDomestica[i].raza << ";" << mascotaDomestica[i].sexo << ";" << mascotaDomestica[i].edad << ";" << mascotaDomestica[i].nombre << endl;
+    }
+
+    f.close();
+    cout << endl << "Todos los datos guardados exitosamente." << endl;
+}
+
+void saveCliente()
+{
+    ofstream f;
+    f.open(pathCliente, ios::app);
+
+    if (!f.is_open())
+    {
+        cout << "Error al guardar el archivo " << pathCliente << endl;
+        return;
+    }
+
+    for (int i = 0; i < indexCliente; i++)
+    {
+        f << clienteConMascota[i].ID << ";" << clienteConMascota[i].nombre << ";" << clienteConMascota[i].cedula << endl;
     }
 
     f.close();
@@ -200,8 +249,8 @@ bool readMascota(string pathFileName)
 {
     ifstream f;
     string line;
-    int fileSize = 0;
-    int bytesRead = 0;
+    // int fileSize = 0;
+    // int bytesRead = 0;
 
     f.open(pathFileName);
     if (!f.is_open())
@@ -211,28 +260,27 @@ bool readMascota(string pathFileName)
     }
 
     // Obtener el tamaño total del archivo
-    f.seekg(0, ios::end);
-    fileSize = f.tellg();
-    f.seekg(0, ios::beg);
+    // f.seekg(0, ios::end);
+    // fileSize = f.tellg();
+    // f.seekg(0, ios::beg);
 
     while (!f.eof())
+
     {
         struct Mascota m;
         vector<string> vDato;
         getline(f, line);
-        bytesRead += line.size() + 1; // Sumar el tamaño de la línea y un caracter de nueva línea
+        //bytesRead += line.size() + 1; // Sumar el tamaño de la línea y un caracter de nueva línea
         
         vDato = SplitToVector(line, ';');
 
-        m.tipo = vDato.at(0);
-        m.nombre = vDato.at(1);
-        m.sexo = vDato.at(2);
-        m.edad = stoi(vDato.at(3));
-        m.raza = vDato.at(4);
+        m.idCliente= stoi(vDato.at(0));
+        m.tipo     = ppToCapitalStr (vDato.at(1));
+        m.nombre   = ppToCapitalStr (vDato.at(2));
+        m.sexo     = ppToCapitalStr (vDato.at(3));
+        m.edad     = stoi(vDato.at(4));
+        m.raza     = ppToCapitalStr (vDato.at(5));
 
-        // cout << endl << "Tipo:" << m.tipo << "\t Nombre:" << m.nombre << "\t Sexo:" << m.sexo << "\t Edad:" << m.edad << "\t Raza:" << m.raza;
-
-        mostrarPorcentajeCarga(bytesRead, fileSize); // Mostrar el porcentaje de carga real
     }
 
     f.close();
@@ -240,20 +288,46 @@ bool readMascota(string pathFileName)
     return true;
 }
 
-void menu()
+bool readCliente()
+{
+    ifstream f;
+    string line;
+
+    f.open(pathCliente);
+    if (!f.is_open())
+    {
+        cout << "Error al abrir el archivo " << pathCliente << endl;
+        return false;
+    }
+
+    while (getline(f, line))
+    {
+        struct Cliente c;
+        vector<string> vDato;
+        vDato = SplitToVector(line, ';');
+
+        c.ID = stoi(vDato.at(0));
+        c.nombre = ppToCapitalStr(vDato.at(1));
+        c.cedula = vDato.at(2);
+    }
+
+    f.close();
+    cout << endl << "Lectura exitosa." << endl;
+    return true;
+}
+
+void menuMascota()
 {
     int opc = 0;
-    string pathArchivo = "../../data/mascotas.txt";
-
+    
     while (true)
     {
         string ingreso;
-        cout << "\t\t---mascotas---" << endl;
+        cout << "\t\t---clientes viejos---" << endl;
         cout << setColor(blue) << "1.- Recuperar mascota" << endl << setColor(rosa) << "2.- Agregar mascota" << endl << setColor(green) << "3.- Presentar Mascota" << setColor(naranja) << endl << setColor(turqueza) << "4.- Guardar mascota" << endl << setColor(red) << "5.- Salir" << endl;
         cout <<setColor(naranja) <<"Ingrese una opcion: ";
 
         getline(cin, ingreso);
-
         try
         {
             opc = stoi(ingreso);
@@ -262,40 +336,186 @@ void menu()
             {
                 switch (opc)
                 {
-                case 1:
-                    readMascota(pathArchivo);
-                    break;
-                case 2:
-                    addMascota();
-                    break;
-                case 3:
-                    showMascota();
-                    break;
-                case 4:
-                    saveMascota(pathArchivo);
-                    break;
-                case 5:
-                    cargaFigura();
-                    return;
+                    case 1:
+                        readMascota(pathMascota);
+                        break;
+                    case 2:
+                        addMascota();
+                        break;
+                    case 3:
+                        showMascota();
+                        break;
+                    case 4:
+                        saveMascota(/*pathMascota*/);
+                        break;
+                    case 5:
+                        cargaFigura();
+                        return;
                 }
             }
             else
             {
-                cout << "Por favor intentelo nuevamente." << endl;
+                cout << "Por favor, intente nuevamente." << endl;
             }
         }
         catch (const exception &e)
         {
-            cout << "Por favor intentelo nuevamente." << endl;
+            cout << "Por favor, intente nuevamente." << endl;
         }
     }
+            
+}
+
+void menuCliente()
+{
+    int opc = 0;
+    string ingreso;
+
+    cout << setColor(blue) << "1.- Agregar nuevo cliente" << endl;
+    cout << setColor(rosa) << "2.- Agregar cedula" << endl;
+    cout << setColor(green) << "3.- Generar ID" << endl;
+
+    getline(cin, ingreso);
+    opc = stoi(ingreso);
+
+    Cliente c;
+
+    switch (opc)
+    {
+        case 1:
+            cout << "Ingrese el nombre del cliente: ";
+            getline(cin, c.nombre);
+            break;
+        case 2:
+            cout << "Ingrese la cedula del cliente: ";
+            getline(cin, c.cedula);
+            break;
+        case 3:
+            cout << "Ingrese el ID del cliente: ";
+            getline(cin, ingreso);
+            c.ID = stoi(ingreso);
+            break;
+        default:
+            cout << "Opcion invalida" << endl;
+            return;
+    }
+
+    clienteConMascota[indexCliente++] = c;
+
+    int respuesta = 0;
+    cout << "Ahora que desea hacer?" << endl;
+    cout <<setColor(blue)<< "1 .- Volver (sin guardar)" << endl;
+    cout <<setColor(rosa)<< "2 .- Guardar datos" << endl;
+    cout <<setColor(turqueza)<< "3 .- Salir" << endl;
+    cout << "Ingrese una opcion: ";
+
+    getline(cin, ingreso);
+    respuesta = stoi(ingreso);
+
+    try
+    {
+        if (respuesta == 1)
+        {
+            int opc=0;
+    
+            try
+            {
+                string eleccion;
+                cout<<"Que desea hacer?"<<endl
+                    <<setColor(red)<<"1.-Ingresar un nuevo usuario"<<endl
+                    <<setColor(naranja)<<"2.- Ingresar con un usuario existente"<<endl
+                    <<setColor(gris)<<"3.-Salir";
+                getline(cin, eleccion);
+                opc = stoi(eleccion);
+
+                if (opc>0 && opc<=3)
+                {
+                    switch (opc)
+                    {
+                        case 1:
+                            menuCliente();
+                            break;
+                        case 2:
+                            menuMascota();
+                            return;
+                            
+                        case 3:
+                            cargaFigura();
+                            return;
+                    }
+                }
+                
+            }
+            catch(const exception& e)
+            {
+                cout<<"Vuelve a intentarlo";
+            }
+            
+        }
+        else if (respuesta == 2)
+        {
+            saveCliente();
+        }
+        else if (respuesta == 3)
+        {
+            cargaFigura();
+            return;
+        }
+        else
+        {
+            cout << "Opcion invalida" << endl;
+        }
+    }
+    catch (const exception &e)
+    {
+        cout << "Opcion invalida" << endl;
+    }
+}
+
+void menu()
+{
+    int opc=0;
+    
+    try
+    {
+        string eleccion;
+        cout<<"Que desea hacer?"<<endl
+        <<setColor(gris)<<"1.- Ingresar un nuevo usuario"
+        <<endl<<setColor(rosa)<<"2.- Ingresar con un usuario existente"
+        <<endl<<setColor(green)<<"3.-Salir"<<endl;
+        getline(cin, eleccion);
+        opc = stoi(eleccion);
+
+        do
+        {
+            if (opc>0 && opc<=3)
+            {
+                switch (opc)
+                {
+                    case 1:
+                        menuCliente();
+                        break;
+                    case 2:
+                        menuMascota();
+                        break;
+                    case 3:
+                        cargaFigura();
+                        return;
+                }
+            }
+        } while (opc=true);
+        
+    }
+    catch(const exception& e)
+    {
+        cout<<"Vuelve a intentarlo";
+    }
+    
 }
 
 int main()
 {
     cargaFigura();
-    //mostrarPorcentajeCarga();
     menu();
     return 0;
 }
-
