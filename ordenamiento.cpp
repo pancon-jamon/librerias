@@ -2,13 +2,14 @@
 #include <unistd.h>
 #include <string>
 #include <windows.h>
+#include <thread> // Para std::this_thread::sleep_for
 using namespace std;
 
 int n[] = {3, 2, 1, 8, 5, 6, 9, 7};
-char str[] = {'j', 'a', 'h', 'n', 'f'};  // Cambiado de string a char
+char str[] = {'j', 'a', 'h', '5', 'f', 'z', 'w', 'b'}; 
 int tmp;
 enum color { blue = 1, green, turqueza, red, rosa, naranja, negro, gris };
-#define SLEEP 90000000
+#define SLEEP 1000//500000
 
 string setColor(color c)
 {
@@ -19,7 +20,7 @@ string setColor(color c)
 
 void showArray(int i, int j)
 {
-    system("cls"); // Limpia la pantalla en Windows
+    system("cls"); 
     cout << endl << endl
          << setColor(green) << " " << string(i * 3, ' ') << "i"
          << setColor(blue) << endl << "[";
@@ -55,37 +56,6 @@ void bubbleSort()
     }
 }
 
-void stringSort(char str[], int len)  // Agregado len para la longitud de la cadena
-{
-    cout << setColor(red) << "Cadena original: ";
-    for (int i = 0; i < len; i++)
-    {
-        cout << str[i];
-    }
-    
-    for (int i = 0; i < len - 1; i++)
-    {
-        int menorElemento = i;
-        for (int j = i + 1; j < len; j++)
-        {
-            if (str[j] < str[menorElemento])
-            {
-                menorElemento = j;
-            }
-        }
-        if (menorElemento != i)
-        {
-            swap(str[i], str[menorElemento]);
-        }
-    }
-    cout << setColor(green) << "Cadena ordenada: ";
-    for (int i = 0; i < len; i++)
-    {
-        cout << str[i];
-    }
-    cout << endl;
-}
-
 void selectSort()
 {
     for (int i = 0; i < 8; i++)
@@ -112,13 +82,52 @@ void selectSort()
     showArray(0, 0);
 }
 
-int main()
-{
-    // selectSort();
-    // bubbleSort();
-    int len = sizeof(str) / sizeof(str[0]);  // Calcula la longitud de la cadena
-    stringSort(str, len);
+//Podemos ordenar letras de manera similar a como ordenamos numeros, para el computador una letra y un numero son indistinguibles,
+//este orden sigue la posicion de la letra en el abecedario siendo la a la mas pequeña y z la mas grande, si quisieramos ordenar letra y numeros
+//primero tomaria en cuenta los numeros y luego las letras
+void stringSort( int len)
+{   
+    for (int i = 0; i < len ; i++)
+    {
+        int menorElemento = i;
+        for (int j = i + 1; j < len; j++)
+        {
+            if (str[j] < str[menorElemento])
+            {
+                menorElemento = j;
+            }
+            
+        }
+        if (menorElemento != i)
+        {
+            swap(str[i], str[menorElemento]);
+            system("cls");
+            cout << setColor(red)<< "Cadena ordenada: " << endl ;//
+            for (int k = 0; k < len; k++)
+            {
+                if (k == i) cout << setColor(naranja);
+                cout << str[k] << " ";
+                cout << setColor(blue);
+            }
+            cout << endl;
+            this_thread::sleep_for(chrono::milliseconds(SLEEP));
+            //usleep(SLEEP);
+        }
+    }
 
-    return 0;
+    char str[] = {'j', 'a', 'h', '5', 'f', 'z', 'w', 'b'}; 
+    cout << setColor(turqueza) << "Cadena original: "<<endl;
+    for (int i = 0; i < len; i++)
+    {
+        cout << setColor(negro) << str[i] << " ";
+    }
 }
 
+int main()
+{
+    int len = sizeof(str) / sizeof(str[0]);
+    cout << endl;
+
+    stringSort(len);
+    return 0;
+}
