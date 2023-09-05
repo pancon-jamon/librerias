@@ -684,7 +684,7 @@ int main()
 
     return 0;
 }
-using namespace std;
+
 enum ERRORES { E_DIV = 500, W_NUM_PAR, W_DEN_PAR};
 
 int main()
@@ -725,13 +725,10 @@ int main()
     cout << " -- FIN -- ";
     /* do code */
 }
-// Unir 2 listas circulares simples:  lista L1 con L2 y muestra la L1 que es la final
+// Unir 2 listas circulares simples:  lista L1 con L2 y muestra la L1 que es la final;
 
-#include <iostream>
-#include <stdlib.h>
-using namespace std;
-
-struct nodo{
+struct nodo
+{
        int nro;        // en este caso es un numero entero
        struct nodo *sgte;
 };
@@ -886,9 +883,6 @@ int main()
    return 0;
 }
 // Listas Enlazadas simples : Inserta, elimina, busca, muestra
-#include <iostream>
-#include <stdlib.h>
-using namespace std;
  
 struct nodo{
        int nro;        // en este caso es un numero entero
